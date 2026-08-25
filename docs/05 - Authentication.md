@@ -263,4 +263,20 @@ const handleLogout = async () => {
 </Button>
 
 ```
-Context" (so the app instantly knows whether to show "Login" or "Logout" in the Navbar on page refresh)?
+
+
+### Handling JWT Auth on our API
+
+Currently, our backend is still working in standard session authentication mode (just the same as it did for our traditional Django projects in Module 5). We need to add this to settings.py to tell Django to accept authentication in the JWT format (which means it should have an 'Authentication' Header on the HTTP request - see the `api.interceptors.request.use` section in `src/api/api.js` from the frontend code):
+
+```python
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
+}
+```
+
+NOTE: This will resolve possible 403 errors you'll see when following the next guide on adding permissions to the DRF framework, as that's the normal 'permission denied' response code when using session authentication.
+
+IMPORTANT: You will need to comment out the above block of code in your settings.py if you want to log in via the admin panel or the DRF Browsable API interface. Alternatively you can use an environment variable to toggle it on/off.

@@ -4,10 +4,12 @@ from django.shortcuts import get_object_or_404
 
 # api_app/views.py
 from rest_framework import status, viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Course
+from .permissions import IsInstructorOrReadOnly
 from .serializers import CourseManualSerializer, CourseSerializer
 
 
@@ -17,6 +19,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 class CourseListCreateAPIView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     """
     Handles GET (list all courses) and POST (create a new course).
     """
@@ -25,10 +28,6 @@ class CourseListCreateAPIView(APIView):
         courses = Course.objects.all()
         # 'many=True' tells DRF we are serializing a list of objects, not just one.
         serializer = CourseManualSerializer(courses, many=True)
-        print("DATA:")
-
-        for object in serializer.data:
-            pprint(object, indent=2)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
@@ -39,7 +38,9 @@ class CourseListCreateAPIView(APIView):
         pprint(request.data)
         # We MUST validate the data before saving
         if serializer.is_valid():
-            serializer.save()  # This triggers the create() method in our serializer
+            serializer.save(
+                instructor=request.user
+            )  # This triggers the create() method in our serializer
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         # If invalid, return the exact errors to the frontend
@@ -51,21 +52,20 @@ class CourseDetailAPIView(APIView):
     Handles GET, PUT, and DELETE for a single course item.
     """
 
+    permission_classes = [IsAuthenticatedOrReadOnly, IsInstructorOrReadOnly]
+
     def get(self, request, pk):
         course = get_object_or_404(Course, pk=pk)
         serializer = CourseManualSerializer(course)
-        print("GET SINGLE COURSE RESPONSE:")
-        pprint(serializer.data, indent=2)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
         course = get_object_or_404(Course, pk=pk)
-        print("REQUEST DATA:")
-        pprint(request.data)
+        self.check_object_permissions(request, course)
+
         serializer = CourseManualSerializer(instance=course, data=request.data)
         if serializer.is_valid():
-            print("REQUEST DATA:")
-            pprint(serializer.validated_data)
+
             serializer.save()  # This triggers the update() method in our serializer
             return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -73,6 +73,7 @@ class CourseDetailAPIView(APIView):
 
     def delete(self, request, pk):
         course = get_object_or_404(Course, pk=pk)
+        self.check_object_permissions(request, course)
         course.delete()
         # 204 No Content is the standard response for a successful deletion
         return Response(status=status.HTTP_204_NO_CONTENT)

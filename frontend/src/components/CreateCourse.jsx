@@ -2,7 +2,8 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 // src/CreateCourse.jsx
 import { useState } from "react";
-import axios from "axios";
+import api from "../api/api";
+
 import { useNavigate } from "react-router-dom"; // Hook for programmatic navigation
 
 export default function CreateCourse() {
@@ -16,9 +17,8 @@ export default function CreateCourse() {
     e.preventDefault(); // Stop the page from reloading
 
     const newCourse = { title, description, is_active: isActive }; // Matches our DRF Serializer fields
-
-    axios
-      .post("http://127.0.0.1:8000/api/courses/", newCourse)
+    api
+      .post("/api/courses/", newCourse)
       .then((response) => {
         // On success, redirect the user back to the list page
         navigate("/");
@@ -52,7 +52,12 @@ export default function CreateCourse() {
           />
         </Form.Group>
         <Form.Group className="mb-3" controlId="is_active">
-          <Form.Check defaultChecked={isActive} onChange={(e) => setIsActive(e.target.checked)} type="checkbox" label="Active" />
+          <Form.Check
+            defaultChecked={isActive}
+            onChange={(e) => setIsActive(e.target.checked)}
+            type="checkbox"
+            label="Active"
+          />
         </Form.Group>
         <Button variant="primary" type="submit">
           Submit

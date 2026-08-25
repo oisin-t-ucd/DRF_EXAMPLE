@@ -20,6 +20,7 @@ class CourseManualSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     title = serializers.CharField(max_length=200)
     description = serializers.CharField()
+    instructor = serializers.CharField(source="instructor.username", read_only=True)
     is_active = serializers.BooleanField(default=True)
 
     # 2. Define how to handle saving NEW data (POST)
@@ -27,6 +28,8 @@ class CourseManualSerializer(serializers.Serializer):
         """
         Create and return a new `Course` instance, given the validated data.
         """
+        print("validated data in serializer:")
+        print(validated_data)
         return Course.objects.create(**validated_data)
 
     # 3. Define how to handle UPDATING existing data (PUT/PATCH)
