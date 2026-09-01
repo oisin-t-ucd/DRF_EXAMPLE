@@ -1,8 +1,10 @@
-# api_app/auth_views.py
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+from .serializers import UserManualSerializer
 
 
 class CookieTokenObtainPairView(TokenObtainPairView):
@@ -49,3 +51,13 @@ class LogoutView(APIView):
         )
         response.delete_cookie("refresh_token")
         return response
+
+
+class CurrentUserAPIView(APIView):
+    # The user MUST have a valid token to access this view
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Serialize the user making the request
+        serializer = UserManualSerializer(request.user)
+        return Response(serializer.data)

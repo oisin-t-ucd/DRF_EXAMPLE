@@ -1,15 +1,15 @@
 // src/Login.jsx
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import api, { setAccessToken } from "../api/api";
-
+import { AuthContext } from "../contexts/AuthContext.jsx";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
+  const { fetchUser } = useContext(AuthContext);
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -18,6 +18,8 @@ export default function Login() {
 
       // Save the access token in memory (Refresh token is set as a cookie automatically!)
       setAccessToken(response.data.access);
+      // Fetch the user details immediately after getting the token!
+      await fetchUser();
       navigate("/");
     } catch (err) {
       setError("Invalid username or password");

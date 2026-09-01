@@ -26,12 +26,14 @@ from courses import urls as courses_urls
 from .views import (
     CookieTokenObtainPairView,
     CookieTokenRefreshView,
+    CurrentUserAPIView,
     LogoutView,
 )
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(courses_urls)),
+    path("api/users/me/", CurrentUserAPIView.as_view(), name="current-user"),
     path("api/login/", CookieTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/refresh/", CookieTokenRefreshView.as_view(), name="token_refresh"),
     path("api/logout/", LogoutView.as_view(), name="logout"),

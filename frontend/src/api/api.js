@@ -42,9 +42,11 @@ api.interceptors.response.use(
                 originalRequest.headers.Authorization = `Bearer ${accessToken}`;
                 return api(originalRequest);
             } catch (err) {
-                // If refresh fails (cookie expired), clear everything and redirect
+                // 1. Clear the token
                 clearAccessToken();
-                window.location.href = '/login';
+                                
+                // 2. Reject the promise so AuthContext knows the request failed
+                return Promise.reject(err); 
             }
         }
         return Promise.reject(error);
