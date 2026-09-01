@@ -2,8 +2,8 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Form, Button, Alert } from "react-bootstrap";
-import api, { setAccessToken } from "../api/api";
-import { AuthContext } from "../contexts/AuthContext.jsx";
+import api, { setAccessToken } from "../../services/api.js";
+import { AuthContext } from "../../contexts/AuthContext.jsx";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

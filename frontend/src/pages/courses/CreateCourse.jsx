@@ -2,7 +2,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 // src/CreateCourse.jsx
 import { useState } from "react";
-import api from "../api/api";
+import api from "../../services/api";
 
 import { useNavigate } from "react-router-dom"; // Hook for programmatic navigation
 

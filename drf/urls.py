@@ -28,6 +28,7 @@ from .views import (
     CookieTokenRefreshView,
     CurrentUserAPIView,
     LogoutView,
+    RegisterAPIView,
 )
 
 urlpatterns = [
@@ -37,4 +38,5 @@ urlpatterns = [
     path("api/login/", CookieTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/refresh/", CookieTokenRefreshView.as_view(), name="token_refresh"),
     path("api/logout/", LogoutView.as_view(), name="logout"),
+    path("api/register/", RegisterAPIView.as_view(), name="register"),
 ]

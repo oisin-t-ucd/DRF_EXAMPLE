@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { AuthContext } from "../contexts/AuthContext";
-import api, { clearAccessToken } from "../api/api";
+import api, { clearAccessToken } from "../services/api";
 
 export default function Navigation() {
   const { user, setUser } = useContext(AuthContext);
@@ -42,9 +42,14 @@ export default function Navigation() {
               </Button>
             </>
           ) : (
-            <Nav.Link as={Link} to="/login">
-              Login
-            </Nav.Link>
+            <>
+              <Nav.Link as={Link} to="/login">
+                Login
+              </Nav.Link>
+              <Nav.Link as={Link} to="/register">
+                Register
+              </Nav.Link>
+            </>
           )}
         </Nav>
       </Container>

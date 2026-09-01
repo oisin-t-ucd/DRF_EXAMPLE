@@ -1,6 +1,6 @@
 // src/AuthContext.jsx
 import { createContext, useState, useEffect } from "react";
-import api from "../api/api"; // Import your Axios interceptor
+import api from "../services/api"; // Import your Axios interceptor
 
 export const AuthContext = createContext();
 

@@ -1,10 +1,29 @@
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+
+# api_app/auth_views.py
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from .serializers import UserManualSerializer
+from .serializers import RegisterManualSerializer, UserManualSerializer
+
+# api_app/auth_views.py
+
+
+class RegisterAPIView(APIView):
+    # Registration must be public (we could just skip this line, but it makes the intent more explicit)
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = RegisterManualSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"message": "User created successfully."},
+                status=status.HTTP_201_CREATED,
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CookieTokenObtainPairView(TokenObtainPairView):
