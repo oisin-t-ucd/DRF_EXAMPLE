@@ -1,5 +1,5 @@
 import Card from "react-bootstrap/Card";
-
+import api from "../../services/api";
 import { useState, useEffect } from "react";
 import axios from "axios";
 // Import your React-Bootstrap components here (e.g., Navbar, Container, Card)
@@ -9,8 +9,9 @@ export default function App() {
 
   useEffect(() => {
     // Fetch data from the DRF endpoint
-    axios
-      .get("http://127.0.0.1:8000/api/courses/")
+
+    api
+      .get("/api/courses/")
       .then((response) => {
         console.log(response.data);
         setCourses(response.data);

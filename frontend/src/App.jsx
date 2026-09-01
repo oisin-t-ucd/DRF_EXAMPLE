@@ -5,6 +5,7 @@ import NavBar from "./components/NavBar";
 import Login from "./pages/auth/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Register from "./pages/auth/Register";
+import Profile from "./pages/auth/Profile";
 
 export default function App() {
   return (
@@ -15,6 +16,16 @@ export default function App() {
           <Route path="/" element={<CourseList />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/courses" element={<CourseList />} />
+
           <Route
             path="/create"
             element={

@@ -54,10 +54,10 @@ Note: VSCode usually prompts to automatically adjust imports when moving these f
 
 To register a user, we need a new endpoint that accepts a username, email, and password, validates them, and securely hashes the password before saving to the database.
 
-Create a new explicit serializer in `api_app/serializers.py`:
+Create a new explicit serializer in `drf/serializers.py`:
 
 ```python
-# api_app/serializers.py
+# drf/serializers.py
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
@@ -90,10 +90,10 @@ class RegisterManualSerializer(serializers.Serializer):
 
 ```
 
-Next, add the APIView in `api_app/auth_views.py` (where your custom JWT views live):
+Next, add the APIView in `drf/auth_views.py` (where your custom JWT views live):
 
 ```python
-# api_app/auth_views.py
+# drf/auth_views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status

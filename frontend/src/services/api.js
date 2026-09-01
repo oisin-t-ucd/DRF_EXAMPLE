@@ -4,12 +4,14 @@ import axios from 'axios';
 // 1. In-memory storage for the access token
 let accessToken = null;
 
-export const setAccessToken = (token) => { accessToken = token; };
+export const setAccessToken = (token) => { 
+    console.log(accessToken)
+    accessToken = token; };
 export const clearAccessToken = () => { accessToken = null; };
 
 // 2. Base Axios instance
 const api = axios.create({
-    baseURL: 'http://127.0.0.1:8000/',
+    baseURL: 'http://localhost:8000/',
     withCredentials: true, // IMPORTANT: Forces browser to send/receive the HttpOnly cookies
 });
 
@@ -31,7 +33,7 @@ api.interceptors.response.use(
             originalRequest._retry = true;
             try {
                 // Attempt to refresh. The browser automatically sends the refresh_token cookie!
-                const res = await axios.post('http://127.0.0.1:8000/api/refresh/', {}, {
+                const res = await axios.post('http://localhost:8000/api/refresh/', {}, {
                     withCredentials: true 
                 });
                 

@@ -22,6 +22,7 @@ from django.urls import include, path
 # router = DefaultRouter()
 # router.register(r"courses", CourseViewSet)
 from courses import urls as courses_urls
+from profiles import urls as profiles_urls
 
 from .views import (
     CookieTokenObtainPairView,
@@ -34,6 +35,7 @@ from .views import (
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(courses_urls)),
+    path("api/", include(profiles_urls)),
     path("api/users/me/", CurrentUserAPIView.as_view(), name="current-user"),
     path("api/login/", CookieTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/refresh/", CookieTokenRefreshView.as_view(), name="token_refresh"),

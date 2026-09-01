@@ -1,7 +1,7 @@
-// src/Navigation.jsx
 import { useContext } from "react";
+// 1. Swap Nav and NavDropdown for standard Dropdown
+import { Container, Image, Navbar, Dropdown, NavLink } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { AuthContext } from "../contexts/AuthContext";
 import api, { clearAccessToken } from "../services/api";
 
@@ -21,37 +21,63 @@ export default function Navigation() {
     }
   };
 
+  const userProfileIcon = user ? (
+    <Image
+      src={user.profile?.avatar || "/default_profile.jpeg"}
+      alt="User Profile"
+      roundedCircle
+      width="40"
+      height="40"
+      className="border m-0 p-0"
+      style={{ objectFit: "cover" }}
+    />
+  ) : null;
+
   return (
-    <Navbar bg="dark" variant="dark">
+    <Navbar bg="light" expand="lg">
       <Container>
-        <Navbar.Brand as={Link} to="/">
-          CourseApp
-        </Navbar.Brand>
-        <Nav className="ms-auto">
+        <Navbar.Brand as={Link} to="/">OfCourse</Navbar.Brand>
+        <NavLink as={Link} to="/courses">Course List</NavLink>
+        <div className="d-flex align-items-center ms-auto">
           {user ? (
-            <>
-              {/* Show a link to the protected route only if logged in */}
-              <Nav.Link as={Link} to="/create" className="me-3">
-                Add Course
-              </Nav.Link>
-              <Navbar.Text className="me-3">
-                Signed in as: <strong>{user.username}</strong>
-              </Navbar.Text>
-              <Button variant="outline-light" onClick={handleLogout} size="sm">
-                Logout
-              </Button>
-            </>
+            <Dropdown align="end">
+              
+              <Dropdown.Toggle 
+                id="user-nav-dropdown"
+                className="bg-transparent border-0 p-0 d-flex align-items-center"
+              >
+                {userProfileIcon}
+              </Dropdown.Toggle>
+
+              
+              <Dropdown.Menu className="position-absolute shadow mt-2">
+                <Dropdown.ItemText className="text-muted">
+                  Signed in as {user.username}
+                </Dropdown.ItemText>
+                
+                <Dropdown.Divider />
+                
+                <Dropdown.Item as={Link} to="/create">
+                  Add Course
+                </Dropdown.Item>
+                
+                <Dropdown.Item as={Link} to="/profile">
+                  Profile
+                </Dropdown.Item>
+                
+                <Dropdown.Item onClick={handleLogout}>
+                  Logout
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           ) : (
             <>
-              <Nav.Link as={Link} to="/login">
-                Login
-              </Nav.Link>
-              <Nav.Link as={Link} to="/register">
-                Register
-              </Nav.Link>
+              
+              <Link to="/login" className="text-decoration-none text-secondary me-3 px-2">Login</Link>
+              <Link to="/register" className="text-decoration-none text-secondary px-2">Register</Link>
             </>
           )}
-        </Nav>
+        </div>
       </Container>
     </Navbar>
   );

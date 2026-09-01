@@ -8,10 +8,10 @@ To make the user's data accessible globally—so your Navbar, profile page, and 
 
 First, we need a secure endpoint that only returns the data of the user making the request.
 
-Add a simple explicit serializer in `api_app/serializers.py`:
+Add a simple explicit serializer in `drf/serializers.py`:
 
 ```python
-# api_app/serializers.py
+# drf/serializers.py
 from rest_framework import serializers
 
 class UserManualSerializer(serializers.Serializer):
@@ -21,10 +21,10 @@ class UserManualSerializer(serializers.Serializer):
 
 ```
 
-Next, create an `APIView` in `api_app/views.py` that utilizes the `IsAuthenticated` permission. Because of this permission, we can safely trust that `request.user` exists.
+Next, create an `APIView` in `drf/views.py` that utilizes the `IsAuthenticated` permission. Because of this permission, we can safely trust that `request.user` exists.
 
 ```python
-# api_app/views.py
+# drf/views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -40,10 +40,10 @@ class CurrentUserAPIView(APIView):
 
 ```
 
-Map it in `api_app/urls.py`:
+Map it in `drf/urls.py`:
 
 ```python
-# api_app/urls.py
+# drf/urls.py
 from django.urls import path
 from .views import CurrentUserAPIView
 

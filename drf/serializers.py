@@ -1,11 +1,18 @@
+# serializers.py
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
+from profiles.serializers import ProfileSerializer
 
-class UserManualSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    username = serializers.CharField()
-    email = serializers.EmailField()
+
+class UserManualSerializer(serializers.ModelSerializer):
+    # Nest the profile serializer. read_only=True ensures we don't
+    # break standard JSON user updates with complex multipart payloads.
+    profile = ProfileSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ["id", "username", "email", "profile"]
 
 
 class RegisterManualSerializer(serializers.Serializer):
