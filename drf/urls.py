@@ -16,7 +16,8 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
+from django.views.generic import TemplateView
 
 # Create a router and register our viewset with it.
 # router = DefaultRouter()
@@ -33,6 +34,7 @@ from .views import (
 )
 
 urlpatterns = [
+    path("", TemplateView.as_view(template_name="dist/index.html")),
     path("admin/", admin.site.urls),
     path("api/", include(courses_urls)),
     path("api/", include(profiles_urls)),
@@ -41,4 +43,5 @@ urlpatterns = [
     path("api/refresh/", CookieTokenRefreshView.as_view(), name="token_refresh"),
     path("api/logout/", LogoutView.as_view(), name="logout"),
     path("api/register/", RegisterAPIView.as_view(), name="register"),
+    re_path(r".*", TemplateView.as_view(template_name="dist/index.html")),
 ]

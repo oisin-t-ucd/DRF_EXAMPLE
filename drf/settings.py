@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+import sys
 
+import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -25,16 +27,30 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-r_4w-8^w%2+r#+!$g30u=&9v+$h(dcsvq+$+==kg924io@g#g6"
+SECRET_KEY = os.environ.get("SECRET_KEY")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# With this code, you must add one of the following if you want to
+# enable DEBUG (this should only be done when resolving issues,
+# ensure DEBUG is False when submitting your project):
+# DEBUG=1
+# DEBUG=True
+DEBUG = os.environ.get("DEBUG") in ["True", "TRUE", "true", "1"]
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
-
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
-
-CORS_ALLOW_CREDENTIALS = True
+RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_EXTERNAL_HOSTNAME:
+    # Automatically add the render URL to ALLOWED_HOSTS (render injects this env var)
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+else:
+    # These settings are only required when running the frontend locally (i.e 'npm run dev'):
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:5173",
+        "http://localhost",
+        "http://127.0.0.1:8000",
+    ]
+    CORS_ALLOW_CREDENTIALS = True
 
 
 # Application definition
@@ -73,7 +89,9 @@ ROOT_URLCONF = "drf.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            os.path.join(BASE_DIR, "staticfiles"),
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -91,12 +109,24 @@ WSGI_APPLICATION = "drf.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+
+if "test" in sys.argv or not "DATABASE_URL" in os.environ:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+else:
+    # Load environment variable or fall back to local sqlite/neon URL
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=os.environ.get("DATABASE_URL"),
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=True,
+        )
+    }
 
 # Django 5.2+ Storage Configuration
 STORAGES = {
@@ -155,9 +185,13 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
+
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "static"),
+# ]
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+WHITENOISE_ROOT = BASE_DIR / "staticfiles" / "dist"
 # Media Settings (URLs)
 MEDIA_URL = "/media/"
 

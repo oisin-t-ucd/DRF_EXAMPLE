@@ -1,6 +1,5 @@
+from django.views.generic import TemplateView
 from rest_framework import status
-
-# api_app/auth_views.py
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -8,7 +7,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from .serializers import RegisterManualSerializer, UserManualSerializer
 
-# api_app/auth_views.py
+
+class Index(TemplateView):
+    template_name = "index.html"
 
 
 class RegisterAPIView(APIView):
