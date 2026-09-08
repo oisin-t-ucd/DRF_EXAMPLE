@@ -61,6 +61,18 @@ We need to transform the React code into static files that a standard web server
 
 #### **IMPORTANT: Every time you make changes to your react app and want those changes to be deployed, you need to perform the 6 steps above again.**
 
+You can also use the `build_frontend.sh` bash script included in this repo to run the above steps automatically after making changes to your react app. Just run this command in your terminal (use GitBash if on Windows):
+
+```bash
+./build_frontend.sh
+```
+
+If you get a `permission denied` error then you'll need to ensure your user has execution permission for the script (after this you'll be able to run the above command):
+
+```bash
+chmod +x build_frontend.sh 
+```
+
 ---
 
 ## Step 3: Configuring Django to Serve React
