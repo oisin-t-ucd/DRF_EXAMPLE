@@ -6,6 +6,7 @@ import Login from "./pages/auth/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Register from "./pages/auth/Register";
 import Profile from "./pages/auth/Profile";
+import NotFound from "./components/NotFound";
 
 export default function App() {
   return (
@@ -34,6 +35,8 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          {/* 2. Catch-All Route for 404s (Must be the last route!) */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </Router>
