@@ -1,4 +1,13 @@
-import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
+import {
+  Badge,
+  Container,
+  Row,
+  Col,
+  Card,
+  Form,
+  Button,
+  ListGroup
+} from "react-bootstrap";
 import api from "../../services/api";
 import { useState, useEffect } from "react";
 
@@ -19,7 +28,7 @@ export default function App() {
       });
 
       // Update state based on the new paginated JSON structure
-      console.log(response.data.results)
+      console.log(response.data.results);
       setCourses(response.data.results);
       setHasNext(response.data.next !== null);
       setHasPrev(response.data.previous !== null);
@@ -52,15 +61,45 @@ export default function App() {
 
       <Row>
         {courses.map((course) => (
-          <Col md={4} className="mb-4" key={course.id}>
-            <Card>
+          <Col md={6} lg={4} className="mb-4" key={course.id}>
+            <Card className="h-100 shadow-sm">
               <Card.Body>
-                <Card.Title>{course.title}</Card.Title>
+                <Card.Title className="d-flex justify-content-between align-items-start">
+                  {course.title}
+                </Card.Title>
+
+                {/* Map over the nested tags array */}
+                <div className="mb-3">
+                  {course.tags?.map((tag) => (
+                    <Badge bg="info" className="me-1" key={tag.id}>
+                      {tag.name}
+                    </Badge>
+                  ))}
+                </div>
+
                 <Card.Text>{course.description}</Card.Text>
-                <Card.Footer className="text-muted text-sm">
-                  Instructor: {course.instructor || "Unknown"}
-                </Card.Footer>
+
+                {/* Conditionally render the nested lessons list */}
+                {course.lessons && course.lessons.length > 0 && (
+                  <div className="mt-3">
+                    <h6 className="text-muted mb-2">Curriculum:</h6>
+                    <ListGroup variant="flush">
+                      {course.lessons.map((lesson) => (
+                        <ListGroup.Item
+                          key={lesson.id}
+                          className="px-0 py-1 border-0 text-sm"
+                        >
+                          &bull; {lesson.title}
+                        </ListGroup.Item>
+                      ))}
+                    </ListGroup>
+                  </div>
+                )}
               </Card.Body>
+
+              <Card.Footer className="text-muted text-sm bg-white">
+                Instructor: {course.instructor || "Unknown"}
+              </Card.Footer>
             </Card>
           </Col>
         ))}
