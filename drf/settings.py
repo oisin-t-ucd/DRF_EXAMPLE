@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "cloudinary",
     "corsheaders",
     "rest_framework",
+    "django_filters",
     "courses",
     "profiles",
 ]
@@ -155,14 +156,33 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+# settings.py
+REST_FRAMEWORK = {
+    # ... your existing JWT authentication setting ...
+    # Add these lines to enable global pagination:
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 5,  # Limit to 5 items per page for testing
+}
 
-if os.environ.get("SESSION_AUTH") != "True":
-    # settings.py
-    REST_FRAMEWORK = {
-        "DEFAULT_AUTHENTICATION_CLASSES": (
-            "rest_framework_simplejwt.authentication.JWTAuthentication",
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        (
+            "rest_framework.authentication.SessionAuthentication"
+            if os.environ.get("SESSION_AUTH") == "True"
+            else "rest_framework_simplejwt.authentication.JWTAuthentication"
         )
-    }
+    ],
+    # Add these lines to enable global pagination:
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 5,  # Limit to 5 items per page for testing
+    # Human readable timestamps in datetime fields
+    "DATETIME_FORMAT": "%d %b %Y",
+}
+if RENDER_EXTERNAL_HOSTNAME:
+    # Prevent displaying the DRF api browser on the deployed site
+    REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] = [
+        "rest_framework.renderers.JSONRenderer",
+    ]
 
 
 # Internationalization

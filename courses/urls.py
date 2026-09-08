@@ -1,12 +1,12 @@
 # api_app/urls.py
 from django.urls import path
-from rest_framework.routers import DefaultRouter
 
-from .views import CourseDetailAPIView, CourseListCreateAPIView, CourseViewSet
+from .views import CourseDetailAPIView, CourseListCreateAPIView
 
-# Create a router and register our viewset with it.
-router = DefaultRouter()
-router.register(r"courses", CourseViewSet)
+# # For ModelViewSet:
+# # Create a router and register our viewset with it.
+# router = DefaultRouter()
+# router.register(r"courses", CourseViewSet)
 
 # The API URLs are now determined automatically by the router.
 # urlpatterns = [
