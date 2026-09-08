@@ -34,7 +34,6 @@ from .views import (
 )
 
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="dist/index.html")),
     path("admin/", admin.site.urls),
     path("api/", include(courses_urls)),
     path("api/", include(profiles_urls)),
@@ -43,5 +42,6 @@ urlpatterns = [
     path("api/refresh/", CookieTokenRefreshView.as_view(), name="token_refresh"),
     path("api/logout/", LogoutView.as_view(), name="logout"),
     path("api/register/", RegisterAPIView.as_view(), name="register"),
-    re_path(r".*", TemplateView.as_view(template_name="dist/index.html")),
+    # Catch-all route: sends all non-API requests to the React index.html
+    re_path(r"^(?!api/).*$", TemplateView.as_view(template_name="index.html")),
 ]

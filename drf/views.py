@@ -45,7 +45,7 @@ class CookieTokenObtainPairView(TokenObtainPairView):
                 max_age=24 * 60 * 60,  # 1 day
                 httponly=True,
                 samesite="Lax",  # Required for cross-origin local development
-                secure=False,  # IMPORTANT: Set to True in production (HTTPS)
+                secure=True,  # IMPORTANT: Set to True in production (HTTPS)
             )
         return response
 

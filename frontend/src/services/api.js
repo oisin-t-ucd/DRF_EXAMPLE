@@ -11,9 +11,9 @@ export const setAccessToken = (token) => {
 export const clearAccessToken = () => {
   accessToken = null;
 };
-const baseURL = import.meta.env.VITE_API_URL
-  ? import.meta.env.VITE_API_URL
-  : "";
+// import.meta.env.DEV is true when running 'npm run dev', and false after 'npm run build'
+const baseURL = import.meta.env.DEV ? 'http://localhost:8000' : '';
+
 // 2. Base Axios instance
 const api = axios.create({
   baseURL,
